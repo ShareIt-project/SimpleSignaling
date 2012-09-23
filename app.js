@@ -12,7 +12,7 @@ var port = process.env.VMC_APP_PORT || 8001
 function requestListener(req, res)
 {
   res.writeHead(200, {'Content-Type': 'text/html'});
-  res.write('This is a ShareIt! backend server. You can get a copy of the ')
+  res.write('This is a ShareIt! handshake server. You can get a copy of the ')
   res.end('source code at <a href="https://github.com/piranna/ShareIt">GitHub</a>')
 }
 
