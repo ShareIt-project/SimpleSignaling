@@ -1,9 +1,9 @@
 // SSL Certificates
 var fs = require('fs')
 
-var options = {key:  fs.readFileSync('../certs/privatekey.pem').toString(),
-			   cert: fs.readFileSync('../certs/certificate.pem').toString(),
-			   ca:   [fs.readFileSync('../certs/certrequest.csr').toString()]}
+var options = {key:  fs.readFileSync('certs/privatekey.pem').toString(),
+			   cert: fs.readFileSync('certs/certificate.pem').toString(),
+			   ca:   [fs.readFileSync('certs/certrequest.csr').toString()]}
 
 // Get AppFog port, or set 8001 as default one
 var port = process.env.VMC_APP_PORT || 8001
