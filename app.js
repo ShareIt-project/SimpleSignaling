@@ -16,8 +16,8 @@ function requestListener(req, res)
   res.end('source code at <a href="https://github.com/piranna/ShareIt">GitHub</a>')
 }
 
-//var server = require('http').createServer(requestListener)
-var server = require('https').createServer(options, requestListener)
+var server = require('http').createServer(requestListener)
+//var server = require('https').createServer(options, requestListener)
     server.listen(port);
 
 // Handshake server
