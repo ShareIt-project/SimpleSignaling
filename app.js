@@ -1,22 +1,33 @@
 // SSL Certificates
 var fs = require('fs')
 
-var options = {key:  fs.readFileSync('../certs/privatekey.pem').toString(),
-			   cert: fs.readFileSync('../certs/certificate.pem').toString(),
-			   ca:   [fs.readFileSync('../certs/certrequest.csr').toString()]}
+var options = {key:  fs.readFileSync('certs/privatekey.pem').toString(),
+			   cert: fs.readFileSync('certs/certificate.pem').toString(),
+			   ca:   [fs.readFileSync('certs/certrequest.csr').toString()]}
 
-var PORT_HANDSHAKE = 8001
-var PORT_PROXY     = 8002
+// Get AppFog port, or set 8001 as default one
+var port = process.env.VMC_APP_PORT || 8001
+
+// HTTP server
+function requestListener(req, res)
+{
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write('This is a ShareIt! handshake server. You can get a copy of the ')
+  res.end('source code at <a href="https://github.com/piranna/ShareIt">GitHub</a>')
+}
+
+var server = require('http').createServer(requestListener)
+//var server = require('https').createServer(options, requestListener)
+    server.listen(port);
 
 // Handshake server
-var server = require('https').createServer(options).listen(PORT_HANDSHAKE);
 var WebSocketServer = require('ws').Server
 var wss = new WebSocketServer({server: server})
 
 // Maximum number of connection to manage simultaneously before start clossing
 var MAX_SOCKETS = 1024
 
-//Array to store connections
+//Array to store connections (we want to remove them later on insertion order)
 wss.sockets = []
 wss.sockets.find = function(socketId)
 {
@@ -60,10 +71,10 @@ wss.on('connection', function(socket)
         wss.sockets.splice(wss.sockets.IndexOf(socket), 1)
     }
 
-    // Close the oldest socket if we are managing too much (we earn memory,
+    // Close the oldest sockets if we are managing too much (we earn memory,
     // peer doesn't have to manage too much open connections and increage arity
     // of the network forcing new peers to use other ones)
-    if(wss.sockets.length >= MAX_SOCKETS)
+    while(wss.sockets.length >= MAX_SOCKETS)
         wss.sockets[0].close()
 
     // Start managing the new socket
