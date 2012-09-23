@@ -71,10 +71,10 @@ wss.on('connection', function(socket)
         wss.sockets.splice(wss.sockets.IndexOf(socket), 1)
     }
 
-    // Close the oldest socket if we are managing too much (we earn memory,
+    // Close the oldest sockets if we are managing too much (we earn memory,
     // peer doesn't have to manage too much open connections and increage arity
     // of the network forcing new peers to use other ones)
-    if(wss.sockets.length >= MAX_SOCKETS)
+    while(wss.sockets.length >= MAX_SOCKETS)
         wss.sockets[0].close()
 
     // Start managing the new socket
