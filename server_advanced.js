@@ -5,11 +5,22 @@ var options = {key:  fs.readFileSync('../certs/privatekey.pem').toString(),
 			   cert: fs.readFileSync('../certs/certificate.pem').toString(),
 			   ca:   [fs.readFileSync('../certs/certrequest.csr').toString()]}
 
-var PORT_HANDSHAKE = 8001
-var PORT_PROXY     = 8002
+// Get AppFog port, or set 8001 as default one
+var port = process.env.VMC_APP_PORT || 8001
+
+// HTTP server
+function requestListener(req, res)
+{
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write('This is a ShareIt! backend server. You can get a copy of the ')
+  res.end('source code at <a href="https://github.com/piranna/ShareIt">GitHub</a>')
+}
+
+//var server = require('http').createServer(requestListener)
+var server = require('https').createServer(options, requestListener)
+    server.listen(port);
 
 // Handshake server
-var server = require('https').createServer(options).listen(PORT_HANDSHAKE);
 var WebSocketServer = require('ws').Server
 var wss = new WebSocketServer({server: server})
 
