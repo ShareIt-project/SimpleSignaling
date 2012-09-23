@@ -27,7 +27,7 @@ var wss = new WebSocketServer({server: server})
 // Maximum number of connection to manage simultaneously before start clossing
 var MAX_SOCKETS = 1024
 
-//Array to store connections
+//Array to store connections (we want to remove them later on insertion order)
 wss.sockets = []
 wss.sockets.find = function(socketId)
 {
