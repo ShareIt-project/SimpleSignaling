@@ -52,12 +52,9 @@ wss.on('connection', function(socket)
         var soc = wss.sockets.find(socketId)
         if(soc)
         {
-            if(eventName == 'connectTo')
-            {
-	            args[1] = socket.id
+            args[1] = socket.id
 
-	            soc.send(JSON.stringify(args));
-	        }
+            soc.send(JSON.stringify(args));
         }
         else
         {
