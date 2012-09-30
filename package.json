@@ -2,7 +2,7 @@
   "name": "shareit",
   "description": "Peer to Peer File Sharing",
   "author": "Jesús Leganés Combarro <piranna@gmail.com>",
-  "version": "0.1.0",
+  "version": "0.1.0-1",
   "dependencies": {
     "ws": "latest"
   },

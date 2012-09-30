@@ -32,9 +32,8 @@ wss.sockets = []
 
 function find(sockets, socketId)
 {
-    for(var i = 0; i < sockets.lenght; i++)
+    for(var i=0, socket; socket = sockets[i]; i++)
     {
-        var socket = sockets[i]
         if(socket.id == socketId)
             return socket
     }
@@ -66,7 +65,7 @@ wss.on('connection', function(socket)
 
     socket.onclose = function()
     {
-        wss.sockets.splice(wss.sockets.IndexOf(socket), 1)
+        wss.sockets.splice(wss.sockets.indexOf(socket), 1)
     }
 
     // Close the oldest sockets if we are managing too much (we earn memory,
@@ -80,7 +79,7 @@ wss.on('connection', function(socket)
     wss.sockets.push(socket)
 
     socket.send(JSON.stringify(['sessionId', socket.id]))
-    console.log("Connected socket.id: "+socket.id)
+//    console.log("Connected socket.id: "+socket.id)
 })
 
 
