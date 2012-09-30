@@ -1,0 +1,10 @@
+{
+  "name": "shareit",
+  "description": "Peer to Peer File Sharing",
+  "author": "Jesús Leganés Combarro <piranna@gmail.com>",
+  "version": "0.1.0",
+  "dependencies": {
+    "ws": "latest"
+  },
+  "engine": "node >= 0.4.1"
+}
