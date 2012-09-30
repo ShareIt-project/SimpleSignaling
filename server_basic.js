@@ -5,72 +5,86 @@ var options = {key:  fs.readFileSync('certs/privatekey.pem').toString(),
 			   cert: fs.readFileSync('certs/certificate.pem').toString(),
 			   ca:   [fs.readFileSync('certs/certrequest.csr').toString()]}
 
-// P2P Stuff
-var io = require('socket.io').listen(8001, options);
-    io.set('log level', 2);
+// Get AppFog port, or set 8001 as default one
+var port = process.env.VMC_APP_PORT || 8001
 
-//var WebSocketServer = require('ws').Server
-//var wss = new WebSocketServer({server: server})
-//var wss = {}
-
-////Array to store connections
-//wss.sockets = {}
-
-io.sockets.on('connection', function(socket)
-//wss.on('connection', function(socket)
+// HTTP server
+function requestListener(req, res)
 {
-	socket.on('joiner', function(room)
-	{
-		var len = io.sockets.clients(room).length;
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write('This is a ShareIt! handshake server. You can get a copy of the ')
+  res.end('source code at <a href="https://github.com/piranna/ShareIt">GitHub</a>')
+}
 
-		if(len >= 2)
-			socket.emit('joiner.error', 'room full');
-		else
-		{
-			socket.join(room);
-			socket.room = room;
+var server = require('http').createServer(requestListener)
+//var server = require('https').createServer(options, requestListener)
+    server.listen(port);
 
-			socket.emit('joiner.success');
+// Handshake server
+var WebSocketServer = require('ws').Server
+var wss = new WebSocketServer({server: server})
 
-			if(len == 1)
-			{
-				socket.peer = io.sockets.clients(room)[0];
-	
-				if(socket.peer != undefined)
-				{
-					// Set this socket as the other socket peer
-					socket.peer.peer = socket;
+// Dict to store rooms
+wss.rooms = {}
 
-					// Notify to both peers that we are now connected
-					socket.emit('peer.connected', socket.id);
-					socket.peer.emit('peer.connected', socket.id);
-				}
-			}
-		}
-	});
+wss.on('connection', function(socket)
+{
+    socket.onmessage = function(message)
+    {
+        var args = JSON.parse(message.data)
 
-	socket.on('disconnect', function()
+        var eventName = args[0]
+        var roomId    = args[1]
+
+        var room = wss.rooms[roomId]
+        if(!room)
+        {
+            room = wss.rooms[roomId] = []
+            room.id = roomId
+        }
+
+        var len = room.length
+
+        if(len >= 2)
+            socket.send(JSON.stringify(['joiner.error', 'room full']))
+        else
+        {
+            room.append(socket)
+            socket.room = room;
+
+            socket.send(JSON.stringify(['joiner.success']));
+
+            if(len == 1)
+            {
+                socket.peer = room[0];
+
+                if(socket.peer != undefined)
+                {
+                    // Set this socket as the other socket peer
+                    socket.peer.peer = socket;
+
+                    // Notify to both peers that we are now connected
+                    socket.send(JSON.stringify(['peer.connected', socket.id]))
+                    socket.peer.send(JSON.stringify(['peer.connected', socket.id]))
+                }
+            }
+        }
+    }
+
+	socket.onclose = function()
 	{
         if(socket.peer != undefined)
         {
-	   	    socket.peer.emit('peer.disconnected');
+	   	    socket.peer.send(JSON.stringify(['peer.disconnected']));
 
 			socket.peer.peer = undefined;
 		}
-	});
 
-	// Proxied events
+        var roomId = socket.room.id
 
-    function onmessage(message)
-    {
-		if(socket.peer != undefined)
-			socket.peer.send(message);
-    }
+        rooms.splice(rooms.indexOf(socket), 1)
 
-    // Detect how to add the EventListener (mainly for Socket.io since don't
-    // follow the W3C WebSocket/DataChannel API)
-    if(socket.on)
-        socket.on('message', onmessage);
-    else
-        socket.onmessage = onmessage;
-});
+        if(!rooms[roomId].lenght)
+            delete rooms[roomId]
+	}
+})

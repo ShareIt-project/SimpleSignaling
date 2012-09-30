@@ -1,76 +1,87 @@
 // SSL Certificates
-var fs = require('fs');
+var fs = require('fs')
 
 var options = {key:  fs.readFileSync('certs/privatekey.pem').toString(),
 			   cert: fs.readFileSync('certs/certificate.pem').toString(),
 			   ca:   [fs.readFileSync('certs/certrequest.csr').toString()]}
 
-// P2P Stuff
-var server = require('https').createServer(options).listen(8001);
+// Get AppFog port, or set 8001 as default one
+var port = process.env.VMC_APP_PORT || 8001
+
+// HTTP server
+function requestListener(req, res)
+{
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write('This is a ShareIt! handshake server. You can get a copy of the ')
+  res.end('source code at <a href="https://github.com/piranna/ShareIt">GitHub</a>')
+}
+
+var server = require('http').createServer(requestListener)
+//var server = require('https').createServer(options, requestListener)
+    server.listen(port);
+
+// Handshake server
 var WebSocketServer = require('ws').Server
 var wss = new WebSocketServer({server: server})
-//var io = require('socket.io').listen({port: 8001});
-//    io.set('log level', 2);
 
-//Array to store connections
-wss.sockets = {}
+// Maximum number of connection to manage simultaneously before start clossing
+var MAX_SOCKETS = 1024
 
-//io.sockets.on('connection', function(socket)
+//Array to store connections (we want to remove them later on insertion order)
+wss.sockets = []
+
+function find(sockets, socketId)
+{
+    for(var i=0, socket; socket = sockets[i]; i++)
+    {
+        if(socket.id == socketId)
+            return socket
+    }
+}
+
 wss.on('connection', function(socket)
 {
-    socket._emit = function()
-    {
-        var args = Array.prototype.slice.call(arguments, 0);
-
-        socket.send(JSON.stringify(args), function(error)
-        {
-            if(error)
-                console.log(error);
-        });
-    }
-
     // Message received
-    function onmessage(message)
+    socket.onmessage = function(message)
     {
-        console.log("socket.onmessage = '"+message+"'")
-        var args = JSON.parse(message)
+        var args = JSON.parse(message.data)
 
         var eventName = args[0]
         var socketId  = args[1]
 
-//        var soc = io.sockets.sockets[socketId]
-        var soc = wss.sockets[socketId]
+        var soc = find(wss.sockets, socketId)
         if(soc)
         {
             args[1] = socket.id
 
-            soc._emit.apply(soc, args);
+            soc.send(JSON.stringify(args));
         }
         else
         {
-            socket._emit(eventName+'.error', socketId);
+            socket.send(JSON.stringify([eventName+'.error', socketId]));
             console.warn(eventName+': '+socket.id+' -> '+socketId);
         }
     }
 
-    // Detect how to add the EventListener (mainly for Socket.io since don't
-    // follow the W3C WebSocket/DataChannel API)
-    if(socket.on)
-        socket.on('message', onmessage);
-    else
-        socket.onmessage = function(message){onmessage(message.data)};
-
-    // Set and register a sockedId if it was not set previously
-    // Mainly for WebSockets server
-    if(socket.id == undefined)
+    socket.onclose = function()
     {
-        socket.id = id()
-        wss.sockets[socket.id] = socket
+        wss.sockets.splice(wss.sockets.indexOf(socket), 1)
     }
 
-    socket._emit('sessionId', socket.id)
-    console.log("Connected socket.id: "+socket.id)
+    // Close the oldest sockets if we are managing too much (we earn memory,
+    // peer doesn't have to manage too much open connections and increage arity
+    // of the network forcing new peers to use other ones)
+    while(wss.sockets.length >= MAX_SOCKETS)
+        wss.sockets[0].close()
+
+    // Start managing the new socket
+    socket.id = id()
+    wss.sockets.push(socket)
+
+    socket.send(JSON.stringify(['sessionId', socket.id]))
+//    console.log("Connected socket.id: "+socket.id)
 })
+
 
 // generate a 4 digit hex code randomly
 function S4() {
