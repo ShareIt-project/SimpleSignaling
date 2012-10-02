@@ -82,7 +82,7 @@ wss.on('connection', function(socket)
 
         var roomId = socket.room.id
 
-        rooms.splice(rooms.IndexOf(socket), 1)
+        rooms.splice(rooms.indexOf(socket), 1)
 
         if(!rooms[roomId].lenght)
             delete rooms[roomId]
