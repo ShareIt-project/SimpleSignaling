@@ -1,0 +1,9 @@
+openssl genrsa -out privatekey.pem 1024
+openssl req -new -key privatekey.pem -out certrequest.csr
+openssl x509 -req -in certrequest.csr -signkey privatekey.pem -out certificate.pem
+
+It's important that on the second step you put your host domain (for example 'localhost')
+on the "Common Name" section when asked, althought other sections are optional. This way
+browser will only warn about self-signed certificate instead of incorrect certificate.
+
+To add an exception, you can go directly to the script URL and accept the certificate from there.

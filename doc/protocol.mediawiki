@@ -1,0 +1,27 @@
+The communications protocol is splited in two parts, one for the handshake
+server for the first time, and another for the communication between the peers.
+The handshake server only allows to connect to another of the peers on the
+network, while the peers have support to manage the full protocol.
+
+The protocol format is a somewhat oversimplified JSON-RPC, being just a JSON
+stringficied array being the first element the function name to be called and
+the other ones their parameters in a positional order. This allow to minimize
+the protocol overloading and also is fast to compose and decompose, at the cost
+of being known the parameters order at both ends. In case of hard necesity, in
+the future would be changed to a pure JSON-RPC implementation.
+
+Protocol is fully asynchronous, thanks/because being closely tied to the
+WebSocket and WebRTC DataChannel APIs used for the communications. This also
+allow to the communications being disacopled, so for example the demanding of a
+new data packet would be send to a peer working as a tracker and receive the
+data from another one at any time.
+
+Currently, the protocol has the next functions:
+
+# ''fileslist.query'': request to the peer it's current files list. It's mainly
+  used at beginning of the communications when the connection is stablished.
+# ''fileslist.send'': send the current files list to the other peer. This would
+  be send as an answer to a ''fileslist.query'' call or when the files list has
+  been updated.
+# ''transfer.query'': request a new data packet to be send
+# ''transfer.send'': send a data packet to the other peer

@@ -1,0 +1,88 @@
+= Web Accesibility Test =
+http://www.tawdis.net/
+
+http://paulirish.com/2012/accessibility-and-developers/
+
+= Static free hosting =
+== Amazon ==
+=== How to get a free trial Amazon AWS instance ===
+http://aws.amazon.com/es/free/
+
+=== How to deploy a sample web on the Amazon AWS free instance ===
+http://docs.amazonwebservices.com/gettingstarted/latest/awsgsg-freetier/deploy-sample-app.html
+
+=== Host and serve static files directly from Amazon S3 ===
+http://aws.typepad.com/aws/2011/02/host-your-static-website-on-amazon-s3.html
+
+== StatiCloud ==
+http://staticloud.com/
+Allow to host static files by free up to 1GB of transfers by month
+
+== DropBox ==
+http://www.kavoir.com/2009/10/free-2gb-html-static-web-pages-hosting.html
+https://www.dropbox.com/help/201/en
+DropBox could be used as a simple, free static HTML web hosting space with (potentially) unlimited transfer.
+
+== 5APPS ==
+Web service to create and host HTML 5 Apps for Chrome, Firefox and iOS
+
+https://5apps.com
+
+= Node.js free hosting =
+Required for the socket.io websockets proxy, and probably in the future for the webrtc handshake
+
+== Nodejitsu & No.de ==
+It seems both have joined. Up to 10Gb/s and 20TB/month, after that $.08/GB.
+
+http://nodejitsu.com/paas/pricing.html
+https://no.de/
+
+== Nodester ==
+http://nodester.com/
+
+== NodeSocket ==
+http://www.nodesocket.com/
+
+== AppFog ==
+http://www.appfog.com/
+Free plan up to 2GB RAM, 1GB of database and 50GB data transfer
+
+== DotCloud ==
+https://www.dotcloud.com
+Support for WebSockets, they cash for RAM. 'Live' account cost about 5$/month,
+but 'sandbox' would be enought.
+
+= WebRTC webshims =
+http://code.google.com/p/webrtc4all/
+
+https://github.com/piranna/DataChannel-polyfill
+
+= What is WebRTC? =
+Interesting link explaining in a simple way what is WebRTC, what would allow to
+do and what is the current status (2012-09-12)
+
+http://lincolnloop.com/blog/2012/sep/12/what-webrtc/
+
+http://bloggeek.me/resources/webrtc-series/
+
+= Font tutorials =
+== How to make a font in Ubuntu ==
+http://www.ehow.com/how_7205965_make-ttf-font-ubuntu.html
+
+== FontForge ==
+http://fontforge.org/overview.html
+http://fontforge.org/editexample.html
+
+= SIP over HTML =
+http://sip-on-the-web.aliax.net
+http://www.sipml5.org
+http://code.google.com/p/sip-js
+http://bloggeek.me/html-sip
+https://github.com/versatica/JsSIP
+
+== Public SIP servers ==
+http://www.cs.columbia.edu/sip/servers.html
+http://code.google.com/p/sipml5/wiki/Public_SIP_Servers
+
+== Public STUN servers ==
+http://www.stunserver.org/

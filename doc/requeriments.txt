@@ -1,0 +1,14 @@
+= Browser =
+Firefox 14
+Internet Explorer 10
+
+== Html5 Technologies ==
+FileReader
+IndexedDB (with File support)
+
+= Libraries =
+JsSIP 0.2.0 (http://www.jssip.net)
+
+== jQuery plugins ==
+jQuery-UI
+TreeTable
