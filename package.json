@@ -3,8 +3,14 @@
   "description": "Simple signaling protocol over WebSockets",
   "author": "Jesús Leganés Combarro <piranna@gmail.com>",
   "version": "0.1.0",
-  "dependencies":
-  {
+  "dependencies": {
     "ws": "latest"
+  },
+  "subdomain": "SimpleSignaling",
+  "scripts": {
+    "start": "server.js"
+  },
+  "engines": {
+    "node": "0.8.x"
   }
 }

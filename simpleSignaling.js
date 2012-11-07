@@ -26,8 +26,8 @@ function SimpleSignaling(configuration)
     {
         websocket.send(JSON.stringify([uid, data]), function(error)
         {
-            if(error)
-                console.warning(error);
+            if(error && self.onerror)
+                self.onerror(error);
         });
     };
 }
