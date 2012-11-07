@@ -51,36 +51,58 @@ wss.on('connection', function(socket)
 
         var uid = message[0];
 
+        var soc = find(wss.sockets, uid);
+
         // UID registration
         if(message.length == 1)
         {
-            // Close the oldest sockets if we are managing too much (we earn
-            // memory)
-            while(wss.sockets.length >= MAX_SOCKETS)
-                wss.sockets[0].close();
+            // Check if we are trying to use a yet registered UID
+            if(soc)
+            {
+                // It's the same socket, update the UID
+                if(socket == soc)
+                    socket.uid = uid;
 
-            // Start managing the new socket
-            socket.uid = uid;
+                // Trying to set the UID of a different socket, raise error
+                else
+                {
+//                  socket.send(JSON.stringify([uid, 'Yet registered']));
+                    console.warn(uid+' is yet registered');
+                }
+            }
 
-            wss.pending_sockets.splice(wss.pending_sockets.indexOf(socket), 1);
-            wss.sockets.push(socket);
+            // Socket want to register for the first time
+            else
+            {
+                // Close the oldest sockets if we are managing too much
+                // (we earn some memory)
+                while(wss.sockets.length >= MAX_SOCKETS)
+                    wss.sockets[0].close();
 
-//            console.log("Connected socket.uid: "+socket.uid);
+                // Set the socket UID
+                socket.uid = uid;
 
-            return
+                // Start managing the new socket
+                var index = wss.pending_sockets.indexOf(socket);
+                wss.pending_sockets.splice(index, 1);
+                wss.sockets.push(socket);
+
+//                console.log("Connected socket.uid: "+socket.uid);
+            }
         }
 
         // Forward message
-        var soc = find(wss.sockets, uid);
-        if(soc)
+        else if(soc)
         {
             message[1] = socket.uid;
 
             soc.send(JSON.stringify(message));
         }
+
+        // Trying to send a message to a non-connected peer, raise error
         else
         {
-//            socket.send(JSON.stringify([eventName+'.error', uid]));
+//            socket.send(JSON.stringify([uid, 'Not connected']));
             console.warn(socket.uid+' -> '+uid);
         }
     };

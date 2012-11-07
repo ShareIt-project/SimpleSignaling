@@ -18,7 +18,7 @@ function SimpleSignaling(configuration)
             };
 
             // Send our UID
-            websocket.send(JSON.stringify([configuration.uid]))
+            websocket.send(JSON.stringify([configuration.uid]));
         };
 
     // Compose and send message
