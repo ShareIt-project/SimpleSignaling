@@ -4,10 +4,16 @@ Jesús Leganés Combarro "Piranna" - [piranna@gmail.com]
 
 SimpleSignaling is a simple and minimalistic signaling protocol using WebSockets
 and developed originally for the [ShareIt!](https://github.com/piranna/ShareIt)
-project.
+project. It is highly indicate for [WebRTC](http://www.webrtc.org) applications.
 
 If you will fork the project (and more if you want to do modifications) please
 send me an email to let me know :-)
+
+## How to use it
+
+You just need to use simpleSignaling.js on the client and deploy a backend
+server.js on a node.js enabled machine with WebSockets. It's recomended it also
+has SSL.
 
 ## License
 
