@@ -2,7 +2,7 @@
   "name": "SimpleSignaling",
   "description": "Simple signaling protocol over WebSockets",
   "author": "Jesús Leganés Combarro <piranna@gmail.com>",
-  "version": "0.1.0",
+  "version": "0.1.0-1",
   "dependencies": {
     "ws": "latest"
   },
