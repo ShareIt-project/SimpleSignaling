@@ -26,9 +26,11 @@ var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({server: server});
 
 // Maximum number of connection to manage simultaneously before start clossing
+var MAX_PENDING_SOCKETS = 64;
 var MAX_SOCKETS = 1024;
 
 //Array to store connections (we want to remove them later on insertion order)
+wss.pending_sockets = [];
 wss.sockets = [];
 
 function find(sockets, socketId)
@@ -49,46 +51,51 @@ wss.on('connection', function(socket)
 
         var uid = message[0];
 
+        // UID registration
+        if(message.length == 1)
+        {
+            // Close the oldest sockets if we are managing too much (we earn
+            // memory)
+            while(wss.sockets.length >= MAX_SOCKETS)
+                wss.sockets[0].close();
+
+            // Start managing the new socket
+            socket.uid = uid;
+
+            wss.pending_sockets.splice(wss.pending_sockets.indexOf(socket), 1);
+            wss.sockets.push(socket);
+
+//            console.log("Connected socket.uid: "+socket.uid);
+
+            return
+        }
+
+        // Forward message
         var soc = find(wss.sockets, uid);
         if(soc)
         {
-            message[1] = socket.id;
+            message[1] = socket.uid;
 
             soc.send(JSON.stringify(message));
         }
         else
         {
 //            socket.send(JSON.stringify([eventName+'.error', uid]));
-            console.warn(socket.id+' -> '+uid);
+            console.warn(socket.uid+' -> '+uid);
         }
     };
 
     socket.onclose = function()
     {
+        wss.pending_sockets.splice(wss.pending_sockets.indexOf(socket), 1);
         wss.sockets.splice(wss.sockets.indexOf(socket), 1);
     };
 
-    // Close the oldest sockets if we are managing too much (we earn memory,
-    // peer doesn't have to manage too much open connections and increage arity
-    // of the network forcing new peers to use other ones)
-    while(wss.sockets.length >= MAX_SOCKETS)
-        wss.sockets[0].close();
+    // Close the oldest pending sockets if we are managing too much (we earn
+    // memory)
+    while(wss.pending_sockets.length >= MAX_PENDING_SOCKETS)
+        wss.pending_sockets[0].close();
 
-    // Start managing the new socket
-    socket.id = id();
-    wss.sockets.push(socket);
-
-    socket.send(JSON.stringify(['sessionId', socket.id]));
-//    console.log("Connected socket.id: "+socket.id);
+    // Set the new socket as pending
+    wss.pending_sockets.push(socket);
 });
-
-
-// generate a 4 digit hex code randomly
-function S4() {
-  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-}
-
-// make a REALLY COMPLICATED AND RANDOM id, kudos to dennis
-function id() {
-  return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-}

@@ -16,6 +16,9 @@ function SimpleSignaling(configuration)
                 if(self.onmessage)
                    self.onmessage(uid, data);
             };
+
+            // Send our UID
+            websocket.send(JSON.stringify([configuration.uid]))
         };
 
     // Compose and send message
