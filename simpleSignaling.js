@@ -1,11 +1,13 @@
-function Transport_init(transport)
+function SimpleSignaling(configuration)
 {
-    EventTarget.call(transport)
+    var self = this;
+
+    var websocket = WebSocket(configuration.ws_uri)
 
     // Compose and send message
-    transport.emit = function(uid, data)
+    this.emit = function(uid, data)
     {
-        transport.send(JSON.stringify([uid, data]), function(error)
+        websocket.send(JSON.stringify([uid, data]), function(error)
         {
             if(error)
                 console.warning(error);
@@ -13,12 +15,14 @@ function Transport_init(transport)
     }
 
     // Message received
-    transport.onmessage = function(message)
+    websocket.onmessage = function(message)
     {
-        message = JSON.parse(message.data)
+        message = JSON.parse(message.data);
 
-        var event = {'uid': message[0], 'data': message[1]}
+        var uid  = message[0];
+        var data = message[1];
 
-        transport.dispatchEvent(event)
-    }
+        if(self.onmessage)
+           self.onmessage(uid, data);
+    };
 }
