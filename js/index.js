@@ -3,11 +3,9 @@ function Transport_init(transport)
     EventTarget.call(transport)
 
     // Compose and send message
-    transport.emit = function()
+    transport.emit = function(uid, data)
     {
-        var args = Array.prototype.slice.call(arguments, 0);
-
-        transport.send(JSON.stringify(args), function(error)
+        transport.send(JSON.stringify([uid, data]), function(error)
         {
             if(error)
                 console.warning(error);
@@ -18,7 +16,8 @@ function Transport_init(transport)
     transport.onmessage = function(message)
     {
         message = JSON.parse(message.data)
-        var event = {'type': message[0], 'data': message.slice(1)}
+
+        var event = {'uid': message[0], 'data': message[1]}
 
         transport.dispatchEvent(event)
     }
