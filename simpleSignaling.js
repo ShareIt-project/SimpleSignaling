@@ -3,7 +3,7 @@ function SimpleSignaling(configuration)
     var self = this;
 
     var websocket = new WebSocket(configuration.ws_uri);
-        websocket.open = function()
+        websocket.onopen = function()
         {
             // Message received
             websocket.onmessage = function(message)
