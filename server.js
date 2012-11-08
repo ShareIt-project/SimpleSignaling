@@ -33,11 +33,11 @@ var MAX_SOCKETS = 1024;
 wss.pending_sockets = [];
 wss.sockets = [];
 
-function find(sockets, socketId)
+function find(sockets, uid)
 {
     for(var i=0, socket; socket = sockets[i]; i++)
     {
-        if(socket.id == socketId)
+        if(socket.uid == uid)
             return socket;
     }
 }
@@ -87,14 +87,14 @@ wss.on('connection', function(socket)
                 wss.pending_sockets.splice(index, 1);
                 wss.sockets.push(socket);
 
-//                console.log("Connected socket.uid: "+socket.uid);
+//                console.log("Registered "+socket.uid);
             }
         }
 
         // Forward message
         else if(soc)
         {
-            message[1] = socket.uid;
+            message[0] = socket.uid;
 
             soc.send(JSON.stringify(message));
         }
