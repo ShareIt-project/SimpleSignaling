@@ -19,6 +19,10 @@ function SimpleSignaling(configuration)
 
             // Send our UID
             websocket.send(JSON.stringify([configuration.uid]));
+
+            // Set signaling as open
+            if(self.onopen)
+                self.onopen(configuration.uid);
         };
 
     // Compose and send message
