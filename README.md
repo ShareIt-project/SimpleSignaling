@@ -15,6 +15,10 @@ You just need to use simpleSignaling.js on the client and deploy a backend
 server.js on a node.js enabled machine with WebSockets. It's recomended it also
 has SSL.
 
+There's also two (public) SSL enabled backend servers that you can use at
+wss://simplesignaling.nodejitsu.com and wss://simplesignaling-piranna.dotcloud.com.
+Just for testing purposes please, the bandwidth is high, but not infinite... :-)
+
 ## License
 
 This code is under the Affero GNU General Public License. I am willing to
