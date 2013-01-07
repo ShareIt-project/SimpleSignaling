@@ -1,3 +1,8 @@
+/**
+ * Client of the SimpleSignaling protocol
+ * @constructor
+ * @param {Object} configuration Configuration of the connection
+ */
 function SimpleSignaling(configuration)
 {
     var self = this;
@@ -25,7 +30,12 @@ function SimpleSignaling(configuration)
                 self.onopen(configuration.uid);
         };
 
-    // Compose and send message
+    /**
+     * Compose and send message
+     * @param {String|null} uid Identifier of the remote peer. If null, message
+     * is send by broadcast to all connected peers
+     * @param data Data to be send
+     */
     this.send = function(uid, data)
     {
         websocket.send(JSON.stringify([uid, data]), function(error)

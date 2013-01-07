@@ -33,6 +33,12 @@ var MAX_SOCKETS = 1024;
 wss.pending_sockets = [];
 wss.sockets = [];
 
+/**
+ * Find a socket on the sockets list based on its uid
+ * @param {Array} sockets Array of sockets
+ * @param {String} uid Identifier of the socket
+ * @returns {Socket|undefined}
+ */
 function find(sockets, uid)
 {
     for(var i=0, socket; socket = sockets[i]; i++)
@@ -107,6 +113,9 @@ wss.on('connection', function(socket)
         }
     };
 
+    /**
+     * Remove the socket from the list of sockets and pending_sockets
+     */
     socket.onclose = function()
     {
         wss.pending_sockets.splice(wss.pending_sockets.indexOf(socket), 1);
