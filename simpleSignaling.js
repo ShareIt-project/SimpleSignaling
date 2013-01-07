@@ -12,7 +12,7 @@ function SimpleSignaling(configuration)
      */
     var UUIDv4 = function b(a){return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)};
 
-    var uid = configuration.uid || UUIDv4();
+    var uid = (configuration.uid != undefined) ? configuration.uid : UUIDv4();
 
     var websocket = new WebSocket(configuration.ws_uri);
         websocket.onopen = function()
@@ -50,5 +50,14 @@ function SimpleSignaling(configuration)
             if(error && self.onerror)
                 self.onerror(error);
         });
+    };
+
+    /**
+     * Get the current UID
+     * @returns {String}
+     */
+    this.uid = function()
+    {
+        return uid;
     };
 }
