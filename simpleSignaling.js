@@ -23,14 +23,15 @@ function SimpleSignaling(configuration)
                 message = JSON.parse(message.data);
 
                 var orig = message[0];
-                var data = message[1];
+                var room = message[1];
+                var data = message[2];
 
                 if(self.onmessage)
-                   self.onmessage(data, orig);
+                   self.onmessage(data, orig, room);
             };
 
             // Send our UID
-            websocket.send(JSON.stringify([uid]));
+            websocket.send(JSON.stringify([uid, configuration.room]));
 
             // Set signaling as open
             if(self.onopen)
@@ -43,9 +44,9 @@ function SimpleSignaling(configuration)
      * @param {String|undefined} uid Identifier of the remote peer. If null,
      * message is send by broadcast to all connected peers
      */
-    this.send = function(message, dest)
+    this.send = function(message, dest, room)
     {
-        websocket.send(JSON.stringify([dest, message]), function(error)
+        websocket.send(JSON.stringify([dest, room, message]), function(error)
         {
             if(error && self.onerror)
                 self.onerror(error);

@@ -32,6 +32,7 @@ var MAX_SOCKETS = 1024;
 //Array to store connections (we want to remove them later on insertion order)
 wss.pending_sockets = [];
 wss.sockets = [];
+wss.rooms = {};
 
 /**
  * Find a socket on the sockets list based on its uid
@@ -56,11 +57,12 @@ wss.on('connection', function(socket)
         message = JSON.parse(message.data);
 
         var dest = message[0];
+        var room = message[1];
 
         var soc = find(wss.sockets, dest);
 
         // UID registration
-        if(message.length == 1)
+        if(message.length == 2)
         {
             // Check if we are trying to use a yet registered UID
             if(soc)
