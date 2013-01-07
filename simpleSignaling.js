@@ -7,6 +7,13 @@ function SimpleSignaling(configuration)
 {
     var self = this;
 
+    /**
+     * UUID generator
+     */
+    var UUIDv4 = function b(a){return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)};
+
+    var uid = configuration.uid || UUIDv4();
+
     var websocket = new WebSocket(configuration.ws_uri);
         websocket.onopen = function()
         {
@@ -23,11 +30,11 @@ function SimpleSignaling(configuration)
             };
 
             // Send our UID
-            websocket.send(JSON.stringify([configuration.uid]));
+            websocket.send(JSON.stringify([uid]));
 
             // Set signaling as open
             if(self.onopen)
-                self.onopen(configuration.uid);
+                self.onopen();
         };
 
     /**
