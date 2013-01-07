@@ -55,9 +55,9 @@ wss.on('connection', function(socket)
     {
         message = JSON.parse(message.data);
 
-        var uid = message[0];
+        var dest = message[0];
 
-        var soc = find(wss.sockets, uid);
+        var soc = find(wss.sockets, dest);
 
         // UID registration
         if(message.length == 1)
@@ -67,13 +67,13 @@ wss.on('connection', function(socket)
             {
                 // It's the same socket, update the UID
                 if(socket == soc)
-                    socket.uid = uid;
+                    socket.uid = dest;
 
                 // Trying to set the UID of a different socket, raise error
                 else
                 {
 //                  socket.send(JSON.stringify([uid, 'Yet registered']));
-                    console.warn(uid+' is yet registered');
+                    console.warn(dest+' is yet registered');
                 }
             }
 
@@ -86,7 +86,7 @@ wss.on('connection', function(socket)
                     wss.sockets[0].close();
 
                 // Set the socket UID
-                socket.uid = uid;
+                socket.uid = dest;
 
                 // Start managing the new socket
                 var index = wss.pending_sockets.indexOf(socket);
@@ -105,11 +105,20 @@ wss.on('connection', function(socket)
             soc.send(JSON.stringify(message));
         }
 
+        // UID not defined, send by broadcast
+        else if(!dest)
+        {
+            message[0] = socket.uid;
+
+            for(var i=0, soc; soc=wss.sockets[i]; i++)
+                soc.send(JSON.stringify(message));
+        }
+
         // Trying to send a message to a non-connected peer, raise error
         else
         {
-//            socket.send(JSON.stringify([uid, 'Not connected']));
-            console.warn(socket.uid+' -> '+uid);
+//            socket.send(JSON.stringify([dest, 'Not connected']));
+            console.warn(socket.uid+' -> '+dest);
         }
     };
 

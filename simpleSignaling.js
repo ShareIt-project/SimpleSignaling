@@ -15,11 +15,11 @@ function SimpleSignaling(configuration)
             {
                 message = JSON.parse(message.data);
 
-                var data = message[0];
-                var uid  = message[1];
+                var orig = message[0];
+                var data = message[1];
 
                 if(self.onmessage)
-                   self.onmessage(data, uid);
+                   self.onmessage(data, orig);
             };
 
             // Send our UID
@@ -36,9 +36,9 @@ function SimpleSignaling(configuration)
      * @param {String|undefined} uid Identifier of the remote peer. If null,
      * message is send by broadcast to all connected peers
      */
-    this.send = function(message, uid)
+    this.send = function(message, dest)
     {
-        websocket.send(JSON.stringify([uid, message]), function(error)
+        websocket.send(JSON.stringify([dest, message]), function(error)
         {
             if(error && self.onerror)
                 self.onerror(error);
