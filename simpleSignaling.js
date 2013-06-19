@@ -15,28 +15,28 @@ function SimpleSignaling(configuration)
     var uid = (configuration.uid != undefined) ? configuration.uid : UUIDv4();
 
     var websocket = new WebSocket(configuration.ws_uri);
-        websocket.onopen = function()
+    websocket.onopen = function()
+    {
+        // Message received
+        websocket.onmessage = function(message)
         {
-            // Message received
-            websocket.onmessage = function(message)
-            {
-                message = JSON.parse(message.data);
-
-                var orig = message[0];
-                var room = message[1];
-                var data = message[2];
-
-                if(self.onmessage)
-                   self.onmessage(data, orig, room);
-            };
-
-            // Send our UID
-            websocket.send(JSON.stringify([uid, configuration.room]));
-
-            // Set signaling as open
-            if(self.onopen)
-                self.onopen();
+            message = JSON.parse(message.data);
+            
+            var orig = message[0];
+            var room = message[1];
+            var data = message[2];
+            
+            if(self.onmessage)
+                self.onmessage(data, orig, room);
         };
+        
+        // Send our UID
+        websocket.send(JSON.stringify([uid, configuration.room]));
+        
+        // Set signaling as open
+        if(self.onopen)
+            self.onopen();
+    };
 
     /**
      * Compose and send message
