@@ -37,6 +37,12 @@ function SimpleSignaling(configuration)
         if(self.onopen)
             self.onopen();
     };
+    
+    websocket.onerror = function(error)
+    {
+        if(error && self.onerror)
+            self.onerror(error);
+    }
 
     /**
      * Compose and send message
@@ -46,11 +52,7 @@ function SimpleSignaling(configuration)
      */
     this.send = function(message, dest, room)
     {
-        websocket.send(JSON.stringify([dest, room, message]), function(error)
-        {
-            if(error && self.onerror)
-                self.onerror(error);
-        });
+        websocket.send(JSON.stringify([dest, room, message]))
     };
 
     /**
