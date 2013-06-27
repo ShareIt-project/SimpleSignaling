@@ -25,7 +25,7 @@ server.listen(port);
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({server: server});
 
-// Maximum number of connection to manage simultaneously before start clossing
+// Maximum number of connection to manage simultaneously before start closing
 var MAX_PENDING_SOCKETS = 64;
 var MAX_SOCKETS = 1024;
 
