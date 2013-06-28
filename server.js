@@ -14,18 +14,18 @@ function requestListener(req, res)
   res.writeHead(200, {'Content-Type': 'text/html'});
   res.write('This is a SimpleSignaling handshake server. You can get a copy ');
   res.write('of the source code at ');
-  res.end  ('<a href="https://github.com/piranna/SimpleSignaling">GitHub</a>');
+  res.end  ('<a href="http://github.com/piranna/SimpleSignaling">GitHub</a>');
 }
 
 var server = require('http').createServer(requestListener);
 //var server = require('https').createServer(options, requestListener);
-    server.listen(port);
+server.listen(port);
 
 // Handshake server
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({server: server});
 
-// Maximum number of connection to manage simultaneously before start clossing
+// Maximum number of connection to manage simultaneously before start closing
 var MAX_PENDING_SOCKETS = 64;
 var MAX_SOCKETS = 1024;
 
