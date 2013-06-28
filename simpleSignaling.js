@@ -6,6 +6,7 @@
 function SimpleSignaling(configuration)
 {
     var self = this;
+    var room = (configuration.room != undefined) ? configuration.room : 'default room';
 
     /**
      * UUID generator
@@ -31,7 +32,7 @@ function SimpleSignaling(configuration)
         };
         
         // Send our UID
-        websocket.send(JSON.stringify([uid, configuration.room]));
+        websocket.send(JSON.stringify([uid, room]));
         
         // Set signaling as open
         if(self.onopen)
@@ -62,5 +63,14 @@ function SimpleSignaling(configuration)
     this.uid = function()
     {
         return uid;
+    };
+
+    /**
+     * Get the broadcast room
+     * @returns {String}
+     */
+    this.room = function()
+    {
+        return room;
     };
 }
