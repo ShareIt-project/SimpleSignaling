@@ -8,6 +8,8 @@ var options = {key:  fs.readFileSync('certs/privatekey.pem').toString(),
 // Get AppFog port, or set 8080 as default one (dotCloud mandatory)
 var port = process.env.VMC_APP_PORT || 8080;
 
+console.log( "Starting server on port " + port )
+
 // HTTP server
 function requestListener(req, res)
 {
