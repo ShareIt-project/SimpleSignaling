@@ -16,7 +16,7 @@ function requestListener(req, res)
   res.writeHead(200, {'Content-Type': 'text/html'});
   res.write('This is a SimpleSignaling handshake server. You can get a copy ');
   res.write('of the source code at ');
-  res.end  ('<a href="http://github.com/piranna/SimpleSignaling">GitHub</a>');
+  res.end  ('<a href="//github.com/ShareIt-project/SimpleSignaling">GitHub</a>');
 }
 
 var server = require('http').createServer(requestListener);
