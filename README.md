@@ -21,21 +21,21 @@ the bandwidth is high, but not infinite... :-)
 
 ## API
 
-```var server = new SimpleSignaling( {
-  // The SimpleSignaling server
-  ws_uri: 'ws://ec2-54-242-188-68.compute-1.amazonaws.com:8080',
-  room: 'broadcast-test', // Optional, not really used in this example
-  uid: 'user identifier' // Optional, a [UUIDv4](//en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29) will be generated
-} )
-
-server.onopen = function() {}
-server.onmessage = function( message, source, room ) {}
-server.onerror = function( error ) {}
-
-server.send( message, uid, room )
-
-server.uid() // Returns UID
-server.room() // Returns room```
+    var server = new SimpleSignaling( {
+      // The SimpleSignaling server
+      ws_uri: 'ws://ec2-54-242-188-68.compute-1.amazonaws.com:8080',
+      room: 'broadcast-test', // Optional, not really used in this example
+      uid: 'user identifier' // Optional, a [UUIDv4](//en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29) will be generated
+    } )
+    
+    server.onopen = function() {}
+    server.onmessage = function( message, source, room ) {}
+    server.onerror = function( error ) {}
+    
+    server.send( message, uid, room )
+    
+    server.uid() // Returns UID
+    server.room() // Returns room
 
 ## License
 
