@@ -21,7 +21,7 @@ the bandwidth is high, but not infinite... :-)
 
 ## API
 
-var server = new SimpleSignaling( {
+```var server = new SimpleSignaling( {
   // The SimpleSignaling server
   ws_uri: 'ws://ec2-54-242-188-68.compute-1.amazonaws.com:8080',
   room: 'broadcast-test', // Optional, not really used in this example
@@ -35,7 +35,7 @@ server.onerror = function( error ) {}
 server.send( message, uid, room )
 
 server.uid() // Returns UID
-server.room() // Returns room
+server.room() // Returns room```
 
 ## License
 
