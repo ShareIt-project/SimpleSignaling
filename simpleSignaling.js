@@ -6,14 +6,16 @@
 function SimpleSignaling(configuration)
 {
     var self = this;
-    var room = (configuration.room != undefined) ? configuration.room : 'default room';
+    var room = configuration.room || 'default room';
 
     /**
      * UUID generator
      */
+    // Version 4 UUIDs have the form xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where x is any hexadecimal digit and y is one of 8, 9, a, or b
+    // (e.g., f47ac10b-58cc-4372-a567-0e02b2c3d479).
     var UUIDv4 = function b(a){return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)};
 
-    var uid = (configuration.uid != undefined) ? configuration.uid : UUIDv4();
+    var uid = configuration.uid || UUIDv4();
 
     var websocket = new WebSocket(configuration.ws_uri);
     websocket.onopen = function()
