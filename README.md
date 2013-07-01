@@ -37,6 +37,13 @@ the bandwidth is high, but not infinite... :-)
     server.uid() // Returns UID
     server.room() // Returns room
 
+## Running on [Ubuntu](//www.ubuntu.com/)
+
+* `sudo apt-get install git nodejs npm`
+* `git clone //github.com/wholcomb/SimpleSignaling`
+* `npm install ws`
+* `./SimpleSignaling/bin/(run_server)[bin/run_server]`
+
 ## License
 
 This code is under the Affero GNU General Public License. I am willing to
