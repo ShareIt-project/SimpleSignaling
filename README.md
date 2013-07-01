@@ -42,7 +42,7 @@ the bandwidth is high, but not infinite... :-)
 * `sudo apt-get install git nodejs npm`
 * `git clone //github.com/wholcomb/SimpleSignaling`
 * `npm install ws`
-* `./SimpleSignaling/bin/[run_server](bin/run_server)`
+* `./SimpleSignaling/bin/run_server`
 
 ## License
 
