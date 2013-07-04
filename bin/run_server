@@ -2,8 +2,8 @@
 
 pushd "${0%/*}/../"
 
-until nodejs server.js; do
-    echo "Server crashed with exit code $?.  Respawning.." >&2
+until nodejs server.js 2>&1 >> server.log; do
+    echo "Server crashed with exit code $?.  Respawning.." >> server.log
     sleep 1
 done
 
